@@ -21,7 +21,7 @@ class NeuralNetwork:
         
 
         # intialising the dictionaries to store weights and biases for easy access and tracking
-        self.LayerWights_dict = {}
+        self.LayerWeights_dict = {}
         self.LayerBias_dict = {}
         
 
@@ -34,14 +34,14 @@ class NeuralNetwork:
             if i != hiddenLayerCount :
                 self.LayerBias_dict[f"hidden_{i}_bias"] = np.zeros((self.hiddenLayerNodes,1))
                 if i == 0:
-                    self.LayerWights_dict[f"hidden_{i}_weight"] = np.random.normal(0.0,0.5,(self.hiddenLayerNodes,self.inputs))
+                    self.LayerWeights_dict[f"hidden_{i}_weight"] = np.random.normal(0.0,1,(self.hiddenLayerNodes,self.inputs))
                     
                 else:
-                    self.LayerWights_dict[f"hidden_{i}_weight"] = np.random.normal(0.0,0.5,(self.hiddenLayerNodes , self.hiddenLayerNodes))
+                    self.LayerWeights_dict[f"hidden_{i}_weight"] = np.random.normal(0.0,1,(self.hiddenLayerNodes , self.hiddenLayerNodes))
             
             else:
                 self.LayerBias_dict[f"output_0_bias"] = np.zeros((self.outputs,1))
-                self.LayerWights_dict[f"output_0_weight"] = np.random.normal(0.0,0.5,(self.outputs,self.hiddenLayerNodes,))
+                self.LayerWeights_dict[f"output_0_weight"] = np.random.normal(0.0,1,(self.outputs,self.hiddenLayerNodes,))
 
         # setting up the stages manually *will implement automatic generation in future
 
@@ -52,11 +52,11 @@ class NeuralNetwork:
 
         # forward propogation of Network manually *will implement automatic generation in future
 
-        self.Z0 = (self.LayerWights_dict["hidden_0_weight"]@Input) + self.LayerBias_dict["hidden_0_bias"]
+        self.Z0 = (self.LayerWeights_dict["hidden_0_weight"]@Input) + self.LayerBias_dict["hidden_0_bias"]
         self.A0 = sig(self.Z0)
-        self.Z1 = (self.LayerWights_dict["hidden_1_weight"]@self.A0) + self.LayerBias_dict["hidden_1_bias"]
+        self.Z1 = (self.LayerWeights_dict["hidden_1_weight"]@self.A0) + self.LayerBias_dict["hidden_1_bias"]
         self.A1 = sig(self.Z1)
-        self.Z2 = (self.LayerWights_dict["output_0_weight"]@self.A1) + self.LayerBias_dict["output_0_bias"]
+        self.Z2 = (self.LayerWeights_dict["output_0_weight"]@self.A1) + self.LayerBias_dict["output_0_bias"]
         self.A2 = sig(self.Z2)
 
         return self.A2
@@ -102,7 +102,7 @@ def Manual_BackProp(Test,Input,Label):
     #print("___")
 
     # calculating garadients of 2nd to last layer weights and biases
-    W2 = Test.LayerWights_dict["output_0_weight"]
+    W2 = Test.LayerWeights_dict["output_0_weight"]
     dC_dA1 = (W2.T)@S2
     dA1_dZ1 = sig(Test.Z1,derivative=True)
     S1 = np.multiply(dC_dA1,dA1_dZ1)
@@ -120,7 +120,7 @@ def Manual_BackProp(Test,Input,Label):
     #print("___")
 
     # calculating garadients of 3rd to last layer weights and biases
-    W1 = Test.LayerWights_dict["hidden_1_weight"]
+    W1 = Test.LayerWeights_dict["hidden_1_weight"]
     dC_dA0 = (W1.T)@S1
     dA0_dZ0 = sig(Test.Z0,derivative=True)
     S0 = np.multiply(dC_dA0,dA0_dZ0)
@@ -157,11 +157,11 @@ def GradientUpdate(Test , Gradients , n):
 
     # manually adjusting gradients for weights and biases
 
-    Test.LayerWights_dict["hidden_0_weight"] = Test.LayerWights_dict["hidden_0_weight"] - n*(Gradients["hidden_0_weight_gradients"])
+    Test.LayerWeights_dict["hidden_0_weight"] = Test.LayerWeights_dict["hidden_0_weight"] - n*(Gradients["hidden_0_weight_gradients"])
     Test.LayerBias_dict["hidden_0_bias"] = Test.LayerBias_dict["hidden_0_bias"] - n*(Gradients["hidden_0_bias_gradients"])
 
-    Test.LayerWights_dict["hidden_1_weight"] = Test.LayerWights_dict["hidden_1_weight"] - n*(Gradients["hidden_1_weight_gradients"])
+    Test.LayerWeights_dict["hidden_1_weight"] = Test.LayerWeights_dict["hidden_1_weight"] - n*(Gradients["hidden_1_weight_gradients"])
     Test.LayerBias_dict["hidden_1_bias"] = Test.LayerBias_dict["hidden_1_bias"] - n*(Gradients["hidden_1_bias_gradients"])
 
-    Test.LayerWights_dict["output_0_weight"] = Test.LayerWights_dict["output_0_weight"] - n*(Gradients["output_0_weight_gradients"])
+    Test.LayerWeights_dict["output_0_weight"] = Test.LayerWeights_dict["output_0_weight"] - n*(Gradients["output_0_weight_gradients"])
     Test.LayerBias_dict["output_0_bias"] = Test.LayerBias_dict["output_0_bias"] - n*(Gradients["output_0_bias_gradients"])
