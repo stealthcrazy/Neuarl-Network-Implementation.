@@ -141,7 +141,7 @@ def Manual_BackProp(Test,Input,Label):
     return Gradients
 
 def SumGradients(CurrGrad , NewGrad):
-    # manually summing the gradients for the minibatch
+    # manually summing the gradients for the minibatches
     CurrGrad["hidden_0_weight_gradients"] += NewGrad["hidden_0_weight_gradients"]
     CurrGrad["hidden_0_bias_gradients"] += NewGrad["hidden_0_bias_gradients"]
 

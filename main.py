@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import Network
 from Network import sig , SSR ,Manual_BackProp , GradientUpdate , SumGradients
-# setting numpy seed to ensure same results
+# setting numpy seed to ensure consistent results
 #np.random.seed(0) 
 
 df = pd.read_csv('train.csv') # loading the csv file
